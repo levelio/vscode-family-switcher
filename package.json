@@ -35,10 +35,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-font-family.loadFontFamilies",
-        "title": "Load Font Families"
-      },
-      {
         "command": "vscode-font-family.switchFontFamily",
         "title": "Switch Font Family"
       }
