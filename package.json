@@ -51,7 +51,7 @@
       "type": "object",
       "title": "vscode-family-switcher",
       "properties": {
-        "vff.blacklist": {
+        "vfs.blacklist": {
           "type": "array",
           "items": {
             "type": "string"

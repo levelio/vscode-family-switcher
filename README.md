@@ -60,7 +60,7 @@ This extension is designed to solve these problems. It allows you to:
 
 | Key             | Description                                              | Type    | Default |
 | --------------- | -------------------------------------------------------- | ------- | ------- |
-| `vff.blacklist` | List of font families to exclude from the font selection | `array` | `[]`    |
+| `vfs.blacklist` | List of font families to exclude from the font selection | `array` | `[]`    |
 
 <!-- configs -->
 

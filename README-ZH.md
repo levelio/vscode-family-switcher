@@ -60,7 +60,7 @@
 
 | Key             | Description                                              | Type    | Default |
 | --------------- | -------------------------------------------------------- | ------- | ------- |
-| `vff.blacklist` | List of font families to exclude from the font selection | `array` | `[]`    |
+| `vfs.blacklist` | List of font families to exclude from the font selection | `array` | `[]`    |
 
 <!-- configs -->
 
