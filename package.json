@@ -1,20 +1,20 @@
 {
   "publisher": "levelio",
-  "name": "vscode-font-family",
-  "displayName": "vscode font family",
+  "name": "vscode-family-switcher",
+  "displayName": "Family Switcher",
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@10.4.1",
-  "description": "Change the font family of VSCode",
+  "description": "Quickly preview and switch between different font families in VSCode",
   "author": "levelio <levelio@petalmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/levelio/vscode-font-family#readme",
+  "homepage": "https://github.com/levelio/vscode-family-switcher#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/levelio/vscode-font-family"
+    "url": "https://github.com/levelio/vscode-family-switcher"
   },
   "bugs": {
-    "url": "https://github.com/levelio/vscode-font-family/issues"
+    "url": "https://github.com/levelio/vscode-family-switcher/issues"
   },
   "categories": [
     "Other"
@@ -35,14 +35,31 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-font-family.switchFontFamily",
-        "title": "Switch Font Family"
+        "command": "vscode-family-switcher.switchFontFamily",
+        "title": "VFS: Switch Font Family"
+      },
+      {
+        "command": "vscode-family-switcher.switchTerminalFontFamily",
+        "title": "VFS: Switch Terminal Font Family"
+      },
+      {
+        "command": "vscode-family-switcher.manageFontBlacklist",
+        "title": "VFS: Manage Font Blacklist"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "vscode-font-family",
-      "properties": {}
+      "title": "vscode-family-switcher",
+      "properties": {
+        "vff.blacklist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of font families to exclude from the font selection"
+        }
+      }
     }
   },
   "scripts": {
