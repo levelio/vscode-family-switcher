@@ -9,7 +9,7 @@ export default antfu(
   },
   {
     rules: {
-      // overrides
+      'ts/ban-ts-comment': 'off',
     },
   },
 )
