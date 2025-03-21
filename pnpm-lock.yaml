@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      font-list:
+        specifier: ^1.5.1
+        version: 1.5.1
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^4.2.1
@@ -1573,6 +1577,9 @@ packages:
 
   flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
+
+  font-list@1.5.1:
+    resolution: {integrity: sha512-Hr5V0dsSv91wH3FgirXd7qh1PydqA/vMQyWjFFWn+lUPJtC+3i2tzgVqbLRcvQh87TGdbTGbAR3mEo4VlwC1jw==}
 
   foreground-child@3.1.1:
     resolution: {integrity: sha512-TMKDUnIte6bfb5nWv7V/caI169OHgvwjb7V4WkeUvbQQdjr5rWKqHFiKWb/fcOwB+CzBT+qbWjvj+DVwRskpIg==}
@@ -4505,6 +4512,8 @@ snapshots:
       keyv: 4.5.4
 
   flatted@3.2.9: {}
+
+  font-list@1.5.1: {}
 
   foreground-child@3.1.1:
     dependencies:

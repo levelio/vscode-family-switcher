@@ -124,9 +124,9 @@ const { activate, deactivate } = defineExtension(() => {
   })
 
   // Register commands
-  commands.registerCommand('vscode-font-family.switchFontFamily', switchFontFamily)
-  commands.registerCommand('vscode-font-family.switchTerminalFontFamily', switchTerminalFontFamily)
-  commands.registerCommand('vscode-font-family.manageFontBlacklist', manageFontBlacklist)
+  commands.registerCommand('vscode-family-switcher.switchFontFamily', switchFontFamily)
+  commands.registerCommand('vscode-family-switcher.switchTerminalFontFamily', switchTerminalFontFamily)
+  commands.registerCommand('vscode-family-switcher.manageFontBlacklist', manageFontBlacklist)
 
   return {
     dispose: () => {
