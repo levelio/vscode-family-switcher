@@ -10,6 +10,9 @@ export default defineConfig({
   external: [
     'vscode',
   ],
+  noExternal: [
+    'font-list',
+  ],
   clean: true,
   minify: false,
   sourcemap: true,

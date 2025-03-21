@@ -1,5 +1,6 @@
-import fontList from 'font-list'
+import * as fontList from 'font-list'
 import { useLogger } from 'reactive-vscode'
+
 import { displayName } from './generated/meta'
 
 export const logger = useLogger(displayName)

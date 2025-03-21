@@ -75,11 +75,11 @@
 
 <!-- commands -->
 
-| Command                                           | Title                            |
-| ------------------------------------------------- | -------------------------------- |
-| `vscode-family-switcher.switchFontFamily`         | VFS: Switch Font Family          |
-| `vscode-family-switcher.switchTerminalFontFamily` | VFS: Switch Terminal Font Family |
-| `vscode-family-switcher.manageFontWhitelist`      | VFS: Manage Font Whitelist       |
+| Command                                   | Title                            |
+| ----------------------------------------- | -------------------------------- |
+| `familySwitcher.switchFontFamily`         | VFS: Switch Font Family          |
+| `familySwitcher.switchTerminalFontFamily` | VFS: Switch Terminal Font Family |
+| `familySwitcher.manageFontWhitelist`      | VFS: Manage Font Whitelist       |
 
 <!-- commands -->
 

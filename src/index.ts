@@ -1,4 +1,4 @@
-import type { QuickPickItem } from 'vscode'
+import type { ExtensionContext, QuickPickItem } from 'vscode'
 import { commands, StatusBarAlignment, window, workspace } from 'vscode'
 import { EDITOR_FONT_FAMILY_CONFIG, getFontWhitelist, setFontFamilyConfig, setFontWhitelist, setTerminalFontFamilyConfig, TERMINAL_FONT_FAMILY_CONFIG } from './config'
 import { getSystemFontFamilies } from './utils'
@@ -125,14 +125,14 @@ function switchTerminalFontFamily() {
   })
 }
 
-export function activate() {
+export function activate(context: ExtensionContext) {
   // Create status bar item
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
 
   // Register commands
-  commands.registerCommand('vscode-family-switcher.switchFontFamily', switchFontFamily)
-  commands.registerCommand('vscode-family-switcher.switchTerminalFontFamily', switchTerminalFontFamily)
-  commands.registerCommand('vscode-family-switcher.manageFontWhitelist', manageFontWhitelist)
+  context.subscriptions.push(commands.registerCommand('familySwitcher.switchFontFamily', switchFontFamily))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.switchTerminalFontFamily', switchTerminalFontFamily))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.manageFontWhitelist', manageFontWhitelist))
 }
 
 export function deactivate() {

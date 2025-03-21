@@ -35,21 +35,21 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-family-switcher.switchFontFamily",
+        "command": "familySwitcher.switchFontFamily",
         "title": "VFS: Switch Font Family"
       },
       {
-        "command": "vscode-family-switcher.switchTerminalFontFamily",
+        "command": "familySwitcher.switchTerminalFontFamily",
         "title": "VFS: Switch Terminal Font Family"
       },
       {
-        "command": "vscode-family-switcher.manageFontWhitelist",
+        "command": "familySwitcher.manageFontWhitelist",
         "title": "VFS: Manage Font Whitelist"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "vscode-family-switcher",
+      "title": "familySwitcher",
       "properties": {
         "vfs.whitelist": {
           "type": "array",
