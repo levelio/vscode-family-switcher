@@ -82,7 +82,7 @@
     "@antfu/eslint-config": "^4.2.1",
     "@antfu/ni": "^24.2.0",
     "@types/node": "^22.13.4",
-    "@types/vscode": "^1.97.0",
+    "@types/vscode": "^1.96.0",
     "@vscode/vsce": "^3.2.2",
     "bumpp": "^10.0.3",
     "eslint": "^9.20.1",
