@@ -2,7 +2,7 @@
   "publisher": "levelio",
   "name": "vscode-family-switcher",
   "displayName": "Family Switcher",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "packageManager": "pnpm@10.4.1",
   "description": "Quickly preview and switch between different font families in VSCode",
