@@ -43,21 +43,21 @@
         "title": "VFS: Switch Terminal Font Family"
       },
       {
-        "command": "vscode-family-switcher.manageFontBlacklist",
-        "title": "VFS: Manage Font Blacklist"
+        "command": "vscode-family-switcher.manageFontWhitelist",
+        "title": "VFS: Manage Font Whitelist"
       }
     ],
     "configuration": {
       "type": "object",
       "title": "vscode-family-switcher",
       "properties": {
-        "vfs.blacklist": {
+        "vfs.whitelist": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "default": [],
-          "description": "List of font families to exclude from the font selection"
+          "description": "List of font families to include in the font selection"
         }
       }
     }
@@ -74,6 +74,9 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "release": "bumpp && nr publish"
+  },
+  "dependencies": {
+    "font-list": "^1.5.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.1",
@@ -96,8 +99,5 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  },
-  "dependencies": {
-    "font-list": "^1.5.1"
   }
 }

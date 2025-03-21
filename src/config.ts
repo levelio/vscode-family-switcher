@@ -9,12 +9,12 @@ export const config = defineConfigObject<Meta.ScopedConfigKeyTypeMap>(
 
 export const EDITOR_FONT_FAMILY_CONFIG = 'editor.fontFamily'
 export const TERMINAL_FONT_FAMILY_CONFIG = 'terminal.integrated.fontFamily'
-export const FONT_BLACKLIST_CONFIG = 'vfs.blacklist'
+export const FONT_WHITELIST_CONFIG = 'vfs.whitelist'
 
 export interface FontFamilyConfig {
   editorFontFamily: string
   terminalFontFamily: string
-  blacklist: string[]
+  whitelist: string[]
 }
 
 export function getFontFamilyConfig(): FontFamilyConfig {
@@ -22,7 +22,7 @@ export function getFontFamilyConfig(): FontFamilyConfig {
   return {
     editorFontFamily: config.get<string>(EDITOR_FONT_FAMILY_CONFIG) || 'monospace',
     terminalFontFamily: config.get<string>(TERMINAL_FONT_FAMILY_CONFIG) || 'monospace',
-    blacklist: config.get<string[]>(FONT_BLACKLIST_CONFIG) || [],
+    whitelist: config.get<string[]>(FONT_WHITELIST_CONFIG) || [],
   }
 }
 
@@ -38,12 +38,12 @@ export async function setTerminalFontFamilyConfig(fontFamily: string | string[])
   await config.update(TERMINAL_FONT_FAMILY_CONFIG, fontFamilyString, true)
 }
 
-export async function setFontBlacklist(blacklist: string[]) {
+export async function setFontWhitelist(whitelist: string[]) {
   const config = workspace.getConfiguration()
-  await config.update(FONT_BLACKLIST_CONFIG, blacklist, true)
+  await config.update(FONT_WHITELIST_CONFIG, whitelist, true)
 }
 
-export async function getFontBlacklist(): Promise<string[]> {
+export async function getFontWhitelist(): Promise<string[]> {
   const config = workspace.getConfiguration()
-  return config.get<string[]>(FONT_BLACKLIST_CONFIG) || []
+  return config.get<string[]>(FONT_WHITELIST_CONFIG) || []
 }

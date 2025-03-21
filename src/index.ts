@@ -1,7 +1,7 @@
 import type { QuickPickItem } from 'vscode'
 import { defineExtension } from 'reactive-vscode'
 import { commands, StatusBarAlignment, window, workspace } from 'vscode'
-import { EDITOR_FONT_FAMILY_CONFIG, FONT_BLACKLIST_CONFIG, getFontBlacklist, setFontBlacklist, setFontFamilyConfig, setTerminalFontFamilyConfig, TERMINAL_FONT_FAMILY_CONFIG } from './config'
+import { EDITOR_FONT_FAMILY_CONFIG, FONT_WHITELIST_CONFIG, getFontWhitelist, setFontFamilyConfig, setFontWhitelist, setTerminalFontFamilyConfig, TERMINAL_FONT_FAMILY_CONFIG } from './config'
 import { getSystemFontFamilies } from './utils'
 
 interface FontPosition {
@@ -39,12 +39,12 @@ const { activate, deactivate } = defineExtension(() => {
   }
 
   async function selectFont(fontFamilies: string[], config: FontConfig, fontFamilyArray: string[], positionIndex: number): Promise<QuickPickItem | undefined> {
-    const blacklist = await getFontBlacklist()
-    const filteredFonts = fontFamilies.filter(font => !blacklist.includes(font))
+    const whitelist = await getFontWhitelist()
+    const filteredFonts = whitelist.length > 0 ? fontFamilies.filter(font => whitelist.includes(font)) : fontFamilies
 
     const fontItems: QuickPickItem[] = filteredFonts.map(font => ({
       label: font,
-      description: blacklist.includes(font) ? 'Blacklisted' : undefined,
+      description: whitelist.includes(font) ? 'Whitelisted' : undefined,
     }))
 
     return await window.showQuickPick(fontItems, {
@@ -60,27 +60,27 @@ const { activate, deactivate } = defineExtension(() => {
     })
   }
 
-  async function manageFontBlacklist() {
+  async function manageFontWhitelist() {
     const fontFamilies = await getSystemFontFamilies()
-    const currentBlacklist = await getFontBlacklist()
+    const currentWhitelist = await getFontWhitelist()
 
     const fontItems: QuickPickItem[] = fontFamilies.map(font => ({
       label: font,
-      picked: currentBlacklist.includes(font),
-      description: currentBlacklist.includes(font) ? 'Blacklisted' : undefined,
+      picked: currentWhitelist.includes(font),
+      description: currentWhitelist.includes(font) ? 'Whitelisted' : undefined,
     }))
 
     const selected = await window.showQuickPick(fontItems, {
-      placeHolder: 'Select fonts to blacklist (press Enter to confirm)',
+      placeHolder: 'Select fonts to whitelist (press Enter to confirm)',
       matchOnDescription: true,
       matchOnDetail: true,
       canPickMany: true,
     })
 
     if (selected) {
-      const newBlacklist = selected.map(item => item.label)
-      await setFontBlacklist(newBlacklist)
-      window.showInformationMessage(`Updated font blacklist: ${newBlacklist.length} fonts blacklisted`)
+      const newWhitelist = selected.map(item => item.label)
+      await setFontWhitelist(newWhitelist)
+      window.showInformationMessage(`Updated font whitelist: ${newWhitelist.length} fonts whitelisted`)
     }
   }
 
@@ -126,7 +126,7 @@ const { activate, deactivate } = defineExtension(() => {
   // Register commands
   commands.registerCommand('vscode-family-switcher.switchFontFamily', switchFontFamily)
   commands.registerCommand('vscode-family-switcher.switchTerminalFontFamily', switchTerminalFontFamily)
-  commands.registerCommand('vscode-family-switcher.manageFontBlacklist', manageFontBlacklist)
+  commands.registerCommand('vscode-family-switcher.manageFontWhitelist', manageFontWhitelist)
 
   return {
     dispose: () => {
