@@ -5,9 +5,12 @@ export default defineConfig({
     'src/index.ts',
   ],
   format: ['cjs'],
-  shims: false,
+  shims: true,
   dts: false,
   external: [
     'vscode',
   ],
+  clean: true,
+  minify: false,
+  sourcemap: true,
 })
