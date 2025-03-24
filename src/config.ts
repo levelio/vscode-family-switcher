@@ -10,19 +10,18 @@ export const config = defineConfigObject<Meta.ScopedConfigKeyTypeMap>(
 export const EDITOR_FONT_FAMILY_CONFIG = 'editor.fontFamily'
 export const TERMINAL_FONT_FAMILY_CONFIG = 'terminal.integrated.fontFamily'
 export const FONT_WHITELIST_CONFIG = 'vfs.whitelist'
+export const FONT_CACHE_CONFIG = 'vfs.fontCache'
 
 export interface FontFamilyConfig {
-  editorFontFamily: string
-  terminalFontFamily: string
   whitelist: string[]
+  fontCache: string[]
 }
 
 export function getFontFamilyConfig(): FontFamilyConfig {
   const config = workspace.getConfiguration()
   return {
-    editorFontFamily: config.get<string>(EDITOR_FONT_FAMILY_CONFIG) || 'monospace',
-    terminalFontFamily: config.get<string>(TERMINAL_FONT_FAMILY_CONFIG) || 'monospace',
     whitelist: config.get<string[]>(FONT_WHITELIST_CONFIG) || [],
+    fontCache: config.get<string[]>(FONT_CACHE_CONFIG) || [],
   }
 }
 
@@ -46,4 +45,19 @@ export async function setFontWhitelist(whitelist: string[]) {
 export async function getFontWhitelist(): Promise<string[]> {
   const config = workspace.getConfiguration()
   return config.get<string[]>(FONT_WHITELIST_CONFIG) || []
+}
+
+export async function setFontCache(fonts: string[]) {
+  const config = workspace.getConfiguration()
+  await config.update(FONT_CACHE_CONFIG, fonts, true)
+}
+
+export async function getFontCache(): Promise<string[]> {
+  const config = workspace.getConfiguration()
+  return config.get<string[]>(FONT_CACHE_CONFIG) || []
+}
+
+export async function hasFontCache(): Promise<boolean> {
+  const cache = await getFontCache()
+  return cache.length > 0
 }

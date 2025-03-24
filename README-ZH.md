@@ -19,6 +19,13 @@
 - 管理字体黑名单，过滤掉不常用的字体
 - 可以设置字体白名单，只显示常用的字体
 
+## 功能
+
+### 字体管理
+- **切换编辑器字体**: 快速更改编辑器字体，实时预览效果。
+- **切换终端字体**: 更改集成终端的字体。
+- **管理字体白名单**: 创建您喜爱的字体列表，以便更快地访问。
+
 ## 功能特点
 
 - 🎨 实时预览：选择字体时立即看到效果
@@ -28,6 +35,11 @@
 - 💾 配置持久化：设置会被保存，重启 VSCode 后仍然有效
 
 ## 使用方法
+
+### 加载字体
+1. 从命令面板运行 **VFS: Load and Cache Fonts** 命令。
+2. 等待字体加载完成（会显示进度通知）。
+3. 加载完成后，您可以在其他操作中快速访问这些字体。
 
 ### 切换编辑器字体
 
@@ -68,6 +80,7 @@
 | Key             | Description                                            | Type    | Default |
 | --------------- | ------------------------------------------------------ | ------- | ------- |
 | `vfs.whitelist` | List of font families to include in the font selection | `array` | `[]`    |
+| `vfs.fontCache` | Cached list of font families                           | `array` | `[]`    |
 
 <!-- configs -->
 
@@ -80,6 +93,7 @@
 | `familySwitcher.switchFontFamily`         | VFS: Switch Font Family          |
 | `familySwitcher.switchTerminalFontFamily` | VFS: Switch Terminal Font Family |
 | `familySwitcher.manageFontWhitelist`      | VFS: Manage Font Whitelist       |
+| `familySwitcher.loadFonts`                | VFS: Load and Cache Fonts        |
 
 <!-- commands -->
 

@@ -45,6 +45,10 @@
       {
         "command": "familySwitcher.manageFontWhitelist",
         "title": "VFS: Manage Font Whitelist"
+      },
+      {
+        "command": "familySwitcher.loadFonts",
+        "title": "VFS: Load and Cache Fonts"
       }
     ],
     "configuration": {
@@ -58,6 +62,14 @@
           },
           "default": [],
           "description": "List of font families to include in the font selection"
+        },
+        "vfs.fontCache": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Cached list of font families"
         }
       }
     }

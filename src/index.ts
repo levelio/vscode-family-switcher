@@ -1,6 +1,16 @@
 import type { ExtensionContext, QuickPickItem } from 'vscode'
-import { commands, StatusBarAlignment, window, workspace } from 'vscode'
-import { EDITOR_FONT_FAMILY_CONFIG, getFontWhitelist, setFontFamilyConfig, setFontWhitelist, setTerminalFontFamilyConfig, TERMINAL_FONT_FAMILY_CONFIG } from './config'
+import { commands, ProgressLocation, StatusBarAlignment, window, workspace } from 'vscode'
+import {
+  EDITOR_FONT_FAMILY_CONFIG,
+  getFontCache,
+  getFontWhitelist,
+  hasFontCache,
+  setFontCache,
+  setFontFamilyConfig,
+  setFontWhitelist,
+  setTerminalFontFamilyConfig,
+  TERMINAL_FONT_FAMILY_CONFIG,
+} from './config'
 import { getSystemFontFamilies } from './utils'
 
 interface FontPosition {
@@ -58,8 +68,30 @@ async function selectFont(fontFamilies: string[], config: FontConfig, fontFamily
   })
 }
 
+// Ensure font cache exists, load fonts if needed
+async function ensureFontCache(): Promise<boolean> {
+  const hasCached = await hasFontCache()
+  if (!hasCached) {
+    const result = await window.showInformationMessage(
+      'Font cache not found. You need to load fonts first.',
+      'Load Fonts',
+    )
+
+    if (result === 'Load Fonts') {
+      await loadFonts()
+      return true
+    }
+    return false
+  }
+  return true
+}
+
 async function manageFontWhitelist() {
-  const fontFamilies = await getSystemFontFamilies()
+  // Check if font cache exists
+  if (!await ensureFontCache())
+    return
+
+  const fontFamilies = await getFontCache()
   const currentWhitelist = await getFontWhitelist()
 
   const fontItems: QuickPickItem[] = fontFamilies.map(font => ({
@@ -83,7 +115,11 @@ async function manageFontWhitelist() {
 }
 
 async function switchFontFamilyWithConfig(config: FontConfig) {
-  const fontFamilies = await getSystemFontFamilies()
+  // Check if font cache exists
+  if (!await ensureFontCache())
+    return
+
+  const fontFamilies = await getFontCache()
   const positionIndex = await selectFontPosition()
 
   if (positionIndex === undefined)
@@ -125,6 +161,34 @@ function switchTerminalFontFamily() {
   })
 }
 
+// Load and cache system fonts
+async function loadFonts() {
+  return window.withProgress({
+    location: ProgressLocation.Notification,
+    title: 'Loading fonts...',
+    cancellable: false,
+  }, async () => {
+    try {
+      // Get system fonts
+      const fontFamilies = await getSystemFontFamilies()
+
+      // Filter out fonts that start with a period
+      const filteredFonts = fontFamilies.filter(font => !font.startsWith('.'))
+
+      // Cache the fonts
+      await setFontCache(filteredFonts)
+
+      window.showInformationMessage(`Successfully loaded and cached ${filteredFonts.length} fonts.`)
+
+      return filteredFonts
+    }
+    catch (error) {
+      window.showErrorMessage(`Failed to load fonts: ${error}`)
+      return []
+    }
+  })
+}
+
 export function activate(context: ExtensionContext) {
   // Create status bar item
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
@@ -133,6 +197,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchFontFamily', switchFontFamily))
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchTerminalFontFamily', switchTerminalFontFamily))
   context.subscriptions.push(commands.registerCommand('familySwitcher.manageFontWhitelist', manageFontWhitelist))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.loadFonts', loadFonts))
 }
 
 export function deactivate() {

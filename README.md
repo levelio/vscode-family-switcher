@@ -27,7 +27,17 @@ This extension is designed to solve these problems. It allows you to:
 - 🔍 Search Support: Quickly find the font you want
 - 💾 Persistent Settings: Settings are saved and persist after VSCode restart
 
+### Font Management
+- **Switch Font Family**: Quickly change fonts for your editor with real-time preview.
+- **Switch Terminal Font Family**: Change font family for the integrated terminal.
+- **Manage Font Whitelist**: Create a custom list of your favorite fonts for quicker access.
+
 ## Usage
+
+### Loading Fonts
+1. Run the command **VFS: Load and Cache Fonts** from the command palette.
+2. Wait for the fonts to load (a progress notification will be displayed).
+3. Once loaded, you can quickly access your fonts for other operations.
 
 ### Switch Editor Font
 
@@ -61,6 +71,7 @@ This extension is designed to solve these problems. It allows you to:
 | Key             | Description                                            | Type    | Default |
 | --------------- | ------------------------------------------------------ | ------- | ------- |
 | `vfs.whitelist` | List of font families to include in the font selection | `array` | `[]`    |
+| `vfs.fontCache` | Cached list of font families                           | `array` | `[]`    |
 
 <!-- configs -->
 
@@ -72,6 +83,7 @@ This extension is designed to solve these problems. It allows you to:
 | `familySwitcher.switchFontFamily`         | VFS: Switch Font Family          |
 | `familySwitcher.switchTerminalFontFamily` | VFS: Switch Terminal Font Family |
 | `familySwitcher.manageFontWhitelist`      | VFS: Manage Font Whitelist       |
+| `familySwitcher.loadFonts`                | VFS: Load and Cache Fonts        |
 
 <!-- commands -->
 
