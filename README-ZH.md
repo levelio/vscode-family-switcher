@@ -80,7 +80,6 @@
 | Key             | Description                                            | Type    | Default |
 | --------------- | ------------------------------------------------------ | ------- | ------- |
 | `vfs.whitelist` | List of font families to include in the font selection | `array` | `[]`    |
-| `vfs.fontCache` | Cached list of font families                           | `array` | `[]`    |
 
 <!-- configs -->
 

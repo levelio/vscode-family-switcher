@@ -62,14 +62,6 @@
           },
           "default": [],
           "description": "List of font families to include in the font selection"
-        },
-        "vfs.fontCache": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [],
-          "description": "Cached list of font families"
         }
       }
     }

@@ -1,3 +1,4 @@
+import type { ExtensionContext } from 'vscode'
 import { defineConfigObject } from 'reactive-vscode'
 import { workspace } from 'vscode'
 import * as Meta from './generated/meta'
@@ -10,7 +11,14 @@ export const config = defineConfigObject<Meta.ScopedConfigKeyTypeMap>(
 export const EDITOR_FONT_FAMILY_CONFIG = 'editor.fontFamily'
 export const TERMINAL_FONT_FAMILY_CONFIG = 'terminal.integrated.fontFamily'
 export const FONT_WHITELIST_CONFIG = 'vfs.whitelist'
-export const FONT_CACHE_CONFIG = 'vfs.fontCache'
+export const FONT_CACHE_KEY = 'vfs.fontCache'
+
+// Global extension context to store state
+let extensionContext: ExtensionContext
+
+export function setExtensionContext(context: ExtensionContext) {
+  extensionContext = context
+}
 
 export interface FontFamilyConfig {
   whitelist: string[]
@@ -21,7 +29,7 @@ export function getFontFamilyConfig(): FontFamilyConfig {
   const config = workspace.getConfiguration()
   return {
     whitelist: config.get<string[]>(FONT_WHITELIST_CONFIG) || [],
-    fontCache: config.get<string[]>(FONT_CACHE_CONFIG) || [],
+    fontCache: extensionContext ? (extensionContext.globalState.get<string[]>(FONT_CACHE_KEY) || []) : [],
   }
 }
 
@@ -48,13 +56,19 @@ export async function getFontWhitelist(): Promise<string[]> {
 }
 
 export async function setFontCache(fonts: string[]) {
-  const config = workspace.getConfiguration()
-  await config.update(FONT_CACHE_CONFIG, fonts, true)
+  if (!extensionContext) {
+    console.error('Extension context not initialized')
+    return
+  }
+  await extensionContext.globalState.update(FONT_CACHE_KEY, fonts)
 }
 
 export async function getFontCache(): Promise<string[]> {
-  const config = workspace.getConfiguration()
-  return config.get<string[]>(FONT_CACHE_CONFIG) || []
+  if (!extensionContext) {
+    console.error('Extension context not initialized')
+    return []
+  }
+  return extensionContext.globalState.get<string[]>(FONT_CACHE_KEY) || []
 }
 
 export async function hasFontCache(): Promise<boolean> {

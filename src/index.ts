@@ -5,6 +5,7 @@ import {
   getFontCache,
   getFontWhitelist,
   hasFontCache,
+  setExtensionContext,
   setFontCache,
   setFontFamilyConfig,
   setFontWhitelist,
@@ -190,6 +191,9 @@ async function loadFonts() {
 }
 
 export function activate(context: ExtensionContext) {
+  // Set extension context for font cache storage
+  setExtensionContext(context)
+
   // Create status bar item
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
 
