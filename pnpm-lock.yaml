@@ -39,9 +39,6 @@ importers:
       pnpm:
         specifier: ^10.4.1
         version: 10.4.1
-      reactive-vscode:
-        specifier: ^0.2.10
-        version: 0.2.10(@types/vscode@1.97.0)
       tsup:
         specifier: ^8.3.6
         version: 8.3.6(jiti@2.4.2)(postcss@8.5.2)(tsx@4.19.2)(typescript@5.7.3)
@@ -616,9 +613,6 @@ packages:
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
-
-  '@reactive-vscode/reactivity@0.2.10':
-    resolution: {integrity: sha512-OEo1s6ZQnjKGm9Kp8b/p8+zaFg3VV6gDw61vIZOx57J750m5pldZ6VT0kah4JYTIlqQMGaHMNsbVCKfSLLcBKg==}
 
   '@rollup/rollup-android-arm-eabi@4.34.8':
     resolution: {integrity: sha512-q217OSE8DTp8AFHuNHXo0Y86e1wtlfVrXiAlwkIvGRQv9zbc6mE3sjIVfwI8sYUyNxwOg0j/Vm1RKM04JcWLJw==}
@@ -2376,11 +2370,6 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  reactive-vscode@0.2.10:
-    resolution: {integrity: sha512-u+nGLLdIS4fB7ksUk77N7pb21kmZ5W4zKPxmrNCycHmvvcsGEiuwj+uwRSMfzXYBC4Ss3M9dW2uRh2h/sQe4jg==}
-    peerDependencies:
-      '@types/vscode': ^1.89.0
-
   read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
     engines: {node: '>=8'}
@@ -3398,8 +3387,6 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.1.1': {}
-
-  '@reactive-vscode/reactivity@0.2.10': {}
 
   '@rollup/rollup-android-arm-eabi@4.34.8':
     optional: true
@@ -5469,11 +5456,6 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
     optional: true
-
-  reactive-vscode@0.2.10(@types/vscode@1.97.0):
-    dependencies:
-      '@reactive-vscode/reactivity': 0.2.10
-      '@types/vscode': 1.97.0
 
   read-pkg-up@7.0.1:
     dependencies:

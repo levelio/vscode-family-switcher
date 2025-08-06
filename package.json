@@ -33,6 +33,29 @@
     "onStartupFinished"
   ],
   "contributes": {
+    "views": {
+      "fontFamilyContainer": [
+        {
+          "id": "fontWhitelistView",
+          "name": "Whitelisted Fonts",
+          "contextualTitle": "Font Whitelist"
+        },
+        {
+          "id": "fontAllView",
+          "name": "All Fonts",
+          "contextualTitle": "All Available Fonts"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "fontFamilyContainer",
+          "title": "Font Family Switcher",
+          "icon": "$(text-size)"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "familySwitcher.switchFontFamily",
@@ -49,6 +72,46 @@
       {
         "command": "familySwitcher.loadFonts",
         "title": "VFS: Load and Cache Fonts"
+      },
+      {
+        "command": "familySwitcher.refreshFonts",
+        "title": "Refresh Fonts",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "familySwitcher.loadFontsFromView",
+        "title": "Load Fonts",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "familySwitcher.addToWhitelist",
+        "title": "Add to Whitelist",
+        "icon": "$(add)"
+      },
+      {
+        "command": "familySwitcher.removeFromWhitelist",
+        "title": "Remove from Whitelist",
+        "icon": "$(remove)"
+      },
+      {
+        "command": "familySwitcher.previewFont",
+        "title": "Preview Font",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "familySwitcher.applyEditorFont",
+        "title": "Apply to Editor",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "familySwitcher.applyTerminalFont",
+        "title": "Apply to Terminal",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "familySwitcher.searchFonts",
+        "title": "Search Fonts",
+        "icon": "$(search)"
       }
     ],
     "configuration": {
@@ -64,6 +127,47 @@
           "description": "List of font families to include in the font selection"
         }
       }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "familySwitcher.loadFontsFromView",
+          "when": "view == fontWhitelistView || view == fontAllView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "familySwitcher.refreshFonts",
+          "when": "view == fontWhitelistView || view == fontAllView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "familySwitcher.searchFonts",
+          "when": "view == fontAllView",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "familySwitcher.applyEditorFont",
+          "when": "view == fontWhitelistView || view == fontAllView",
+          "group": "inline@1"
+        },
+        {
+          "command": "familySwitcher.applyTerminalFont",
+          "when": "view == fontWhitelistView || view == fontAllView",
+          "group": "inline@2"
+        },
+        {
+          "command": "familySwitcher.addToWhitelist",
+          "when": "view == fontAllView && viewItem == availableFont",
+          "group": "inline@3"
+        },
+        {
+          "command": "familySwitcher.removeFromWhitelist",
+          "when": "viewItem == whitelistedFont || viewItem == whitelistedFontInAll",
+          "group": "inline@4"
+        }
+      ]
     }
   },
   "scripts": {

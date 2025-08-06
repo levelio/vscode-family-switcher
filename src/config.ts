@@ -1,12 +1,5 @@
 import type { ExtensionContext } from 'vscode'
-import { defineConfigObject } from 'reactive-vscode'
 import { workspace } from 'vscode'
-import * as Meta from './generated/meta'
-
-export const config = defineConfigObject<Meta.ScopedConfigKeyTypeMap>(
-  Meta.scopedConfigs.scope,
-  Meta.scopedConfigs.defaults,
-)
 
 export const EDITOR_FONT_FAMILY_CONFIG = 'editor.fontFamily'
 export const TERMINAL_FONT_FAMILY_CONFIG = 'terminal.integrated.fontFamily'

@@ -1,4 +1,5 @@
 import type { ExtensionContext, QuickPickItem } from 'vscode'
+import type { FontTreeItem } from './fontTreeProvider'
 import { commands, ProgressLocation, StatusBarAlignment, window, workspace } from 'vscode'
 import {
   EDITOR_FONT_FAMILY_CONFIG,
@@ -12,6 +13,7 @@ import {
   setTerminalFontFamilyConfig,
   TERMINAL_FONT_FAMILY_CONFIG,
 } from './config'
+import { FontViewManager } from './fontViewManager'
 import { getSystemFontFamilies } from './utils'
 
 interface FontPosition {
@@ -34,6 +36,7 @@ const FONT_POSITIONS: FontPosition[] = [
 ]
 
 let statusBarItem: any
+let fontViewManager: FontViewManager
 
 async function selectFontPosition(): Promise<number | undefined> {
   const positionSelected = await window.showQuickPick(FONT_POSITIONS, {
@@ -111,6 +114,10 @@ async function manageFontWhitelist() {
   if (selected) {
     const newWhitelist = selected.map(item => item.label)
     await setFontWhitelist(newWhitelist)
+
+    // 刷新视图以显示更新后的白名单
+    fontViewManager.refreshViews()
+
     window.showInformationMessage(`Updated font whitelist: ${newWhitelist.length} fonts whitelisted`)
   }
 }
@@ -194,14 +201,31 @@ export function activate(context: ExtensionContext) {
   // Set extension context for font cache storage
   setExtensionContext(context)
 
+  // Initialize font view manager
+  fontViewManager = new FontViewManager(context)
+
   // Create status bar item
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
 
-  // Register commands
+  // Register tree data providers
+  window.registerTreeDataProvider('fontWhitelistView', fontViewManager.getWhitelistProvider())
+  window.registerTreeDataProvider('fontAllView', fontViewManager.getAllFontsProvider())
+
+  // Register original commands
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchFontFamily', switchFontFamily))
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchTerminalFontFamily', switchTerminalFontFamily))
   context.subscriptions.push(commands.registerCommand('familySwitcher.manageFontWhitelist', manageFontWhitelist))
   context.subscriptions.push(commands.registerCommand('familySwitcher.loadFonts', loadFonts))
+
+  // Register GUI-related commands
+  context.subscriptions.push(commands.registerCommand('familySwitcher.refreshFonts', () => fontViewManager.refreshViews()))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.loadFontsFromView', () => fontViewManager.loadFontsFromView()))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.previewFont', (item: FontTreeItem) => fontViewManager.previewFont(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.applyEditorFont', (item: FontTreeItem) => fontViewManager.applyEditorFont(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.applyTerminalFont', (item: FontTreeItem) => fontViewManager.applyTerminalFont(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.addToWhitelist', (item: FontTreeItem) => fontViewManager.addToWhitelist(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.removeFromWhitelist', (item: FontTreeItem) => fontViewManager.removeFromWhitelist(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.searchFonts', manageFontWhitelist))
 }
 
 export function deactivate() {
