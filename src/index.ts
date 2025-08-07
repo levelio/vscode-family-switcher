@@ -4,12 +4,12 @@ import { commands, ProgressLocation, StatusBarAlignment, window, workspace } fro
 import {
   EDITOR_FONT_FAMILY_CONFIG,
   getFontCache,
-  getFontWhitelist,
+  getFontFavorites,
   hasFontCache,
   setExtensionContext,
   setFontCache,
   setFontFamilyConfig,
-  setFontWhitelist,
+  setFontFavorites,
   setTerminalFontFamilyConfig,
   TERMINAL_FONT_FAMILY_CONFIG,
 } from './config'
@@ -51,12 +51,12 @@ async function selectFontPosition(): Promise<number | undefined> {
 }
 
 async function selectFont(fontFamilies: string[], config: FontConfig, fontFamilyArray: string[], positionIndex: number): Promise<QuickPickItem | undefined> {
-  const whitelist = await getFontWhitelist()
-  const filteredFonts = whitelist.length > 0 ? fontFamilies.filter(font => whitelist.includes(font)) : fontFamilies
+  const favorites = await getFontFavorites()
+  const filteredFonts = favorites.length > 0 ? fontFamilies.filter(font => favorites.includes(font)) : fontFamilies
 
   const fontItems: QuickPickItem[] = filteredFonts.map(font => ({
     label: font,
-    description: whitelist.includes(font) ? 'Whitelisted' : undefined,
+    description: favorites.includes(font) ? 'Favorited' : undefined,
   }))
 
   return await window.showQuickPick(fontItems, {
@@ -90,35 +90,35 @@ async function ensureFontCache(): Promise<boolean> {
   return true
 }
 
-async function manageFontWhitelist() {
+async function manageFontFavorites() {
   // Check if font cache exists
   if (!await ensureFontCache())
     return
 
   const fontFamilies = await getFontCache()
-  const currentWhitelist = await getFontWhitelist()
+  const currentFavorites = await getFontFavorites()
 
   const fontItems: QuickPickItem[] = fontFamilies.map(font => ({
     label: font,
-    picked: currentWhitelist.includes(font),
-    description: currentWhitelist.includes(font) ? 'Whitelisted' : undefined,
+    picked: currentFavorites.includes(font),
+    description: currentFavorites.includes(font) ? 'Favorited' : undefined,
   }))
 
   const selected = await window.showQuickPick(fontItems, {
-    placeHolder: 'Select fonts to whitelist (press Enter to confirm)',
+    placeHolder: 'Select fonts to favorite (press Enter to confirm)',
     matchOnDescription: true,
     matchOnDetail: true,
     canPickMany: true,
   })
 
   if (selected) {
-    const newWhitelist = selected.map(item => item.label)
-    await setFontWhitelist(newWhitelist)
+    const newFavorites = selected.map(item => item.label)
+    await setFontFavorites(newFavorites)
 
-    // 刷新视图以显示更新后的白名单
+    // Refresh views to show updated favorites
     fontViewManager.refreshViews()
 
-    window.showInformationMessage(`Updated font whitelist: ${newWhitelist.length} fonts whitelisted`)
+    window.showInformationMessage(`Updated font favorites: ${newFavorites.length} fonts favorited`)
   }
 }
 
@@ -208,13 +208,13 @@ export function activate(context: ExtensionContext) {
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
 
   // Register tree data providers
-  window.registerTreeDataProvider('fontWhitelistView', fontViewManager.getWhitelistProvider())
+  window.registerTreeDataProvider('fontFavoritesView', fontViewManager.getFavoritesProvider())
   window.registerTreeDataProvider('fontAllView', fontViewManager.getAllFontsProvider())
 
   // Register original commands
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchFontFamily', switchFontFamily))
   context.subscriptions.push(commands.registerCommand('familySwitcher.switchTerminalFontFamily', switchTerminalFontFamily))
-  context.subscriptions.push(commands.registerCommand('familySwitcher.manageFontWhitelist', manageFontWhitelist))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.manageFontFavorites', manageFontFavorites))
   context.subscriptions.push(commands.registerCommand('familySwitcher.loadFonts', loadFonts))
 
   // Register GUI-related commands
@@ -223,9 +223,9 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('familySwitcher.previewFont', (item: FontTreeItem) => fontViewManager.previewFont(item)))
   context.subscriptions.push(commands.registerCommand('familySwitcher.applyEditorFont', (item: FontTreeItem) => fontViewManager.applyEditorFont(item)))
   context.subscriptions.push(commands.registerCommand('familySwitcher.applyTerminalFont', (item: FontTreeItem) => fontViewManager.applyTerminalFont(item)))
-  context.subscriptions.push(commands.registerCommand('familySwitcher.addToWhitelist', (item: FontTreeItem) => fontViewManager.addToWhitelist(item)))
-  context.subscriptions.push(commands.registerCommand('familySwitcher.removeFromWhitelist', (item: FontTreeItem) => fontViewManager.removeFromWhitelist(item)))
-  context.subscriptions.push(commands.registerCommand('familySwitcher.searchFonts', manageFontWhitelist))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.addToFavorites', (item: FontTreeItem) => fontViewManager.addToFavorites(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.removeFromFavorites', (item: FontTreeItem) => fontViewManager.removeFromFavorites(item)))
+  context.subscriptions.push(commands.registerCommand('familySwitcher.searchFonts', manageFontFavorites))
 }
 
 export function deactivate() {

@@ -36,9 +36,9 @@
     "views": {
       "fontFamilyContainer": [
         {
-          "id": "fontWhitelistView",
-          "name": "Whitelisted Fonts",
-          "contextualTitle": "Font Whitelist"
+          "id": "fontFavoritesView",
+          "name": "Favorite Fonts",
+          "contextualTitle": "Font Favorites"
         },
         {
           "id": "fontAllView",
@@ -66,8 +66,8 @@
         "title": "VFS: Switch Terminal Font Family"
       },
       {
-        "command": "familySwitcher.manageFontWhitelist",
-        "title": "VFS: Manage Font Whitelist"
+        "command": "familySwitcher.manageFontFavorites",
+        "title": "VFS: Manage Font Favorites"
       },
       {
         "command": "familySwitcher.loadFonts",
@@ -84,13 +84,13 @@
         "icon": "$(cloud-download)"
       },
       {
-        "command": "familySwitcher.addToWhitelist",
-        "title": "Add to Whitelist",
+        "command": "familySwitcher.addToFavorites",
+        "title": "Add to Favorites",
         "icon": "$(add)"
       },
       {
-        "command": "familySwitcher.removeFromWhitelist",
-        "title": "Remove from Whitelist",
+        "command": "familySwitcher.removeFromFavorites",
+        "title": "Remove from Favorites",
         "icon": "$(remove)"
       },
       {
@@ -118,7 +118,7 @@
       "type": "object",
       "title": "familySwitcher",
       "properties": {
-        "vfs.whitelist": {
+        "vfs.favorites": {
           "type": "array",
           "items": {
             "type": "string"
@@ -132,12 +132,12 @@
       "view/title": [
         {
           "command": "familySwitcher.loadFontsFromView",
-          "when": "view == fontWhitelistView || view == fontAllView",
+          "when": "view == fontFavoritesView || view == fontAllView",
           "group": "navigation@1"
         },
         {
           "command": "familySwitcher.refreshFonts",
-          "when": "view == fontWhitelistView || view == fontAllView",
+          "when": "view == fontFavoritesView || view == fontAllView",
           "group": "navigation@2"
         },
         {
@@ -149,22 +149,22 @@
       "view/item/context": [
         {
           "command": "familySwitcher.applyEditorFont",
-          "when": "view == fontWhitelistView || view == fontAllView",
+          "when": "view == fontFavoritesView || view == fontAllView",
           "group": "inline@1"
         },
         {
           "command": "familySwitcher.applyTerminalFont",
-          "when": "view == fontWhitelistView || view == fontAllView",
+          "when": "view == fontFavoritesView || view == fontAllView",
           "group": "inline@2"
         },
         {
-          "command": "familySwitcher.addToWhitelist",
+          "command": "familySwitcher.addToFavorites",
           "when": "view == fontAllView && viewItem == availableFont",
           "group": "inline@3"
         },
         {
-          "command": "familySwitcher.removeFromWhitelist",
-          "when": "viewItem == whitelistedFont || viewItem == whitelistedFontInAll",
+          "command": "familySwitcher.removeFromFavorites",
+          "when": "viewItem == favoritedFont || viewItem == favoritedFontInAll",
           "group": "inline@4"
         }
       ]

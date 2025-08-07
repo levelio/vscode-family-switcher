@@ -3,7 +3,7 @@ import { workspace } from 'vscode'
 
 export const EDITOR_FONT_FAMILY_CONFIG = 'editor.fontFamily'
 export const TERMINAL_FONT_FAMILY_CONFIG = 'terminal.integrated.fontFamily'
-export const FONT_WHITELIST_CONFIG = 'vfs.whitelist'
+export const FONT_FAVORITES_CONFIG = 'vfs.favorites'
 export const FONT_CACHE_KEY = 'vfs.fontCache'
 
 // Global extension context to store state
@@ -14,14 +14,14 @@ export function setExtensionContext(context: ExtensionContext) {
 }
 
 export interface FontFamilyConfig {
-  whitelist: string[]
+  favorites: string[]
   fontCache: string[]
 }
 
 export function getFontFamilyConfig(): FontFamilyConfig {
   const config = workspace.getConfiguration()
   return {
-    whitelist: config.get<string[]>(FONT_WHITELIST_CONFIG) || [],
+    favorites: config.get<string[]>(FONT_FAVORITES_CONFIG) || [],
     fontCache: extensionContext ? (extensionContext.globalState.get<string[]>(FONT_CACHE_KEY) || []) : [],
   }
 }
@@ -38,14 +38,14 @@ export async function setTerminalFontFamilyConfig(fontFamily: string | string[])
   await config.update(TERMINAL_FONT_FAMILY_CONFIG, fontFamilyString, true)
 }
 
-export async function setFontWhitelist(whitelist: string[]) {
+export async function setFontFavorites(favorites: string[]) {
   const config = workspace.getConfiguration()
-  await config.update(FONT_WHITELIST_CONFIG, whitelist, true)
+  await config.update(FONT_FAVORITES_CONFIG, favorites, true)
 }
 
-export async function getFontWhitelist(): Promise<string[]> {
+export async function getFontFavorites(): Promise<string[]> {
   const config = workspace.getConfiguration()
-  return config.get<string[]>(FONT_WHITELIST_CONFIG) || []
+  return config.get<string[]>(FONT_FAVORITES_CONFIG) || []
 }
 
 export async function setFontCache(fonts: string[]) {

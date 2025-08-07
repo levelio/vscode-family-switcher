@@ -1,39 +1,39 @@
 import type { Event, ExtensionContext, TreeDataProvider } from 'vscode'
 import { EventEmitter, ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode'
-import { getFontCache, getFontWhitelist, hasFontCache } from './config'
+import { getFontCache, getFontFavorites, hasFontCache } from './config'
 
 /**
- * 字体树项类，表示树形视图中的单个字体项
+ * Font tree item class, represents a single font item in the tree view
  */
 export class FontTreeItem extends TreeItem {
   constructor(
     public readonly fontName: string,
-    public readonly isWhitelisted: boolean,
-    public readonly viewType: 'whitelist' | 'all',
+    public readonly isFavorited: boolean,
+    public readonly viewType: 'favorites' | 'all',
   ) {
     super(fontName, TreeItemCollapsibleState.None)
 
     this.label = fontName
-    this.tooltip = `Font Family: ${fontName}${isWhitelisted ? ' (Whitelisted)' : ''}`
-    this.description = isWhitelisted ? 'Whitelisted' : undefined
+    this.tooltip = `Font Family: ${fontName}${isFavorited ? ' (Favorited)' : ''}`
+    this.description = isFavorited ? 'Favorited' : undefined
 
-    // 设置图标
-    if (isWhitelisted) {
+    // Set icon
+    if (isFavorited) {
       this.iconPath = new ThemeIcon('star-full')
     }
     else {
       this.iconPath = new ThemeIcon('symbol-text')
     }
 
-    // 设置上下文值，用于控制菜单显示
-    if (viewType === 'whitelist') {
-      this.contextValue = 'whitelistedFont'
+    // Set context value for menu control
+    if (viewType === 'favorites') {
+      this.contextValue = 'favoritedFont'
     }
     else {
-      this.contextValue = isWhitelisted ? 'whitelistedFontInAll' : 'availableFont'
+      this.contextValue = isFavorited ? 'favoritedFontInAll' : 'availableFont'
     }
 
-    // 设置命令，双击时预览字体
+    // Set command for font preview on double click
     this.command = {
       command: 'familySwitcher.previewFont',
       title: 'Preview Font',
@@ -43,30 +43,30 @@ export class FontTreeItem extends TreeItem {
 }
 
 /**
- * 白名单字体树数据提供器
+ * Favorites font tree data provider
  */
-export class FontWhitelistProvider implements TreeDataProvider<FontTreeItem> {
+export class FontFavoritesProvider implements TreeDataProvider<FontTreeItem> {
   private _onDidChangeTreeData: EventEmitter<FontTreeItem | undefined | null | void> = new EventEmitter<FontTreeItem | undefined | null | void>()
   readonly onDidChangeTreeData: Event<FontTreeItem | undefined | null | void> = this._onDidChangeTreeData.event
 
   constructor(private context: ExtensionContext) {}
 
   /**
-   * 刷新树形视图
+   * Refresh tree view
    */
   refresh(): void {
     this._onDidChangeTreeData.fire()
   }
 
   /**
-   * 获取树项
+   * Get tree item
    */
   getTreeItem(element: FontTreeItem): TreeItem {
     return element
   }
 
   /**
-   * 获取子项列表
+   * Get children list
    */
   async getChildren(element?: FontTreeItem): Promise<FontTreeItem[]> {
     if (element) {
@@ -74,23 +74,23 @@ export class FontWhitelistProvider implements TreeDataProvider<FontTreeItem> {
     }
 
     try {
-      // 检查是否有字体缓存
+      // Check if font cache exists
       if (!await hasFontCache()) {
         return []
       }
 
-      const whitelist = await getFontWhitelist()
-      return whitelist.map(font => new FontTreeItem(font, true, 'whitelist'))
+      const favorites = await getFontFavorites()
+      return favorites.map(font => new FontTreeItem(font, true, 'favorites'))
     }
     catch (error) {
-      console.error('Error getting whitelisted fonts:', error)
+      console.error('Error getting favorited fonts:', error)
       return []
     }
   }
 }
 
 /**
- * 全部字体树数据提供器
+ * All fonts tree data provider
  */
 export class FontAllProvider implements TreeDataProvider<FontTreeItem> {
   private _onDidChangeTreeData: EventEmitter<FontTreeItem | undefined | null | void> = new EventEmitter<FontTreeItem | undefined | null | void>()
@@ -99,21 +99,21 @@ export class FontAllProvider implements TreeDataProvider<FontTreeItem> {
   constructor(private context: ExtensionContext) {}
 
   /**
-   * 刷新树形视图
+   * Refresh tree view
    */
   refresh(): void {
     this._onDidChangeTreeData.fire()
   }
 
   /**
-   * 获取树项
+   * Get tree item
    */
   getTreeItem(element: FontTreeItem): TreeItem {
     return element
   }
 
   /**
-   * 获取子项列表
+   * Get children list
    */
   async getChildren(element?: FontTreeItem): Promise<FontTreeItem[]> {
     if (element) {
@@ -121,17 +121,17 @@ export class FontAllProvider implements TreeDataProvider<FontTreeItem> {
     }
 
     try {
-      // 检查是否有字体缓存
+      // Check if font cache exists
       if (!await hasFontCache()) {
         return []
       }
 
       const allFonts = await getFontCache()
-      const whitelist = await getFontWhitelist()
+      const favorites = await getFontFavorites()
 
       return allFonts.map(font => new FontTreeItem(
         font,
-        whitelist.includes(font),
+        favorites.includes(font),
         'all',
       ))
     }

@@ -1,46 +1,46 @@
 import type { ExtensionContext } from 'vscode'
 import type { FontTreeItem } from './fontTreeProvider'
 import { ProgressLocation, window, workspace } from 'vscode'
-import { getFontWhitelist, setFontFamilyConfig, setFontWhitelist, setTerminalFontFamilyConfig } from './config'
-import { FontAllProvider, FontWhitelistProvider } from './fontTreeProvider'
+import { getFontFavorites, setFontFamilyConfig, setFontFavorites, setTerminalFontFamilyConfig } from './config'
+import { FontAllProvider, FontFavoritesProvider } from './fontTreeProvider'
 import { getSystemFontFamilies } from './utils'
 
 /**
- * 字体视图管理器，负责管理GUI面板的操作
+ * Font view manager, responsible for managing GUI panel operations
  */
 export class FontViewManager {
-  private whitelistProvider: FontWhitelistProvider
+  private favoritesProvider: FontFavoritesProvider
   private allFontsProvider: FontAllProvider
 
   constructor(private context: ExtensionContext) {
-    this.whitelistProvider = new FontWhitelistProvider(context)
+    this.favoritesProvider = new FontFavoritesProvider(context)
     this.allFontsProvider = new FontAllProvider(context)
   }
 
   /**
-   * 获取白名单字体提供器
+   * Get favorites font provider
    */
-  getWhitelistProvider(): FontWhitelistProvider {
-    return this.whitelistProvider
+  getFavoritesProvider(): FontFavoritesProvider {
+    return this.favoritesProvider
   }
 
   /**
-   * 获取全部字体提供器
+   * Get all fonts provider
    */
   getAllFontsProvider(): FontAllProvider {
     return this.allFontsProvider
   }
 
   /**
-   * 刷新所有视图
+   * Refresh all views
    */
   refreshViews(): void {
-    this.whitelistProvider.refresh()
+    this.favoritesProvider.refresh()
     this.allFontsProvider.refresh()
   }
 
   /**
-   * 从视图加载字体
+   * Load fonts from view
    */
   async loadFontsFromView(): Promise<void> {
     return window.withProgress({
@@ -49,16 +49,16 @@ export class FontViewManager {
       cancellable: false,
     }, async () => {
       try {
-        // 获取系统字体
+        // Get system fonts
         const fontFamilies = await getSystemFontFamilies()
 
-        // 过滤掉以点开头的字体
+        // Filter out fonts that start with a period
         const filteredFonts = fontFamilies.filter(font => !font.startsWith('.'))
 
-        // 缓存字体
+        // Cache fonts
         await this.context.globalState.update('vfs.fontCache', filteredFonts)
 
-        // 刷新视图
+        // Refresh views
         this.refreshViews()
 
         window.showInformationMessage(`Successfully loaded and cached ${filteredFonts.length} fonts.`)
@@ -70,21 +70,21 @@ export class FontViewManager {
   }
 
   /**
-   * 预览字体
+   * Preview font
    */
   async previewFont(item: FontTreeItem): Promise<void> {
     try {
       const fontName = item.fontName
 
-      // 获取当前编辑器字体配置
+      // Get current editor font configuration
       const config = workspace.getConfiguration()
       const currentFontFamily = config.get<string>('editor.fontFamily') || ''
 
-      // 设置新字体为主要字体
+      // Set new font as primary font
       const fontFamilyArray = currentFontFamily.split(',').map(f => f.trim())
       fontFamilyArray[0] = fontName
 
-      // 应用字体预览
+      // Apply font preview
       await setFontFamilyConfig(fontFamilyArray)
 
       window.showInformationMessage(`Previewing font: ${fontName}`)
@@ -95,18 +95,18 @@ export class FontViewManager {
   }
 
   /**
-   * 应用字体到编辑器
+   * Apply font to editor
    */
   async applyEditorFont(item: FontTreeItem): Promise<void> {
     try {
       const fontName = item.fontName
 
-      // 获取当前编辑器字体配置
+      // Get current editor font configuration
       const config = workspace.getConfiguration()
       const currentFontFamily = config.get<string>('editor.fontFamily') || ''
       const fontFamilyArray = currentFontFamily.split(',').map(f => f.trim())
 
-      // 显示字体位置选择
+      // Show font position selection
       const FONT_POSITIONS = [
         { label: 'Primary Font', description: 'Main font' },
         { label: 'Secondary Font', description: 'First fallback font' },
@@ -126,7 +126,7 @@ export class FontViewManager {
 
       const positionIndex = FONT_POSITIONS.findIndex(item => item.label === positionSelected.label)
 
-      // 设置字体到指定位置
+      // Set font to specified position
       fontFamilyArray[positionIndex] = fontName
       await setFontFamilyConfig(fontFamilyArray)
 
@@ -138,18 +138,18 @@ export class FontViewManager {
   }
 
   /**
-   * 应用字体到终端
+   * Apply font to terminal
    */
   async applyTerminalFont(item: FontTreeItem): Promise<void> {
     try {
       const fontName = item.fontName
 
-      // 获取当前终端字体配置
+      // Get current terminal font configuration
       const config = workspace.getConfiguration()
       const currentFontFamily = config.get<string>('terminal.integrated.fontFamily') || ''
       const fontFamilyArray = currentFontFamily.split(',').map(f => f.trim())
 
-      // 显示字体位置选择
+      // Show font position selection
       const FONT_POSITIONS = [
         { label: 'Primary Font', description: 'Main font' },
         { label: 'Secondary Font', description: 'First fallback font' },
@@ -169,7 +169,7 @@ export class FontViewManager {
 
       const positionIndex = FONT_POSITIONS.findIndex(item => item.label === positionSelected.label)
 
-      // 设置字体到指定位置
+      // Set font to specified position
       fontFamilyArray[positionIndex] = fontName
       await setTerminalFontFamilyConfig(fontFamilyArray)
 
@@ -181,49 +181,49 @@ export class FontViewManager {
   }
 
   /**
-   * 添加到白名单
+   * Add to favorites
    */
-  async addToWhitelist(item: FontTreeItem): Promise<void> {
+  async addToFavorites(item: FontTreeItem): Promise<void> {
     try {
       const fontName = item.fontName
-      const currentWhitelist = await getFontWhitelist()
+      const currentFavorites = await getFontFavorites()
 
-      if (currentWhitelist.includes(fontName)) {
-        window.showInformationMessage(`${fontName} is already in the whitelist`)
+      if (currentFavorites.includes(fontName)) {
+        window.showInformationMessage(`${fontName} is already in favorites`)
         return
       }
 
-      const newWhitelist = [...currentWhitelist, fontName]
-      await setFontWhitelist(newWhitelist)
+      const newFavorites = [...currentFavorites, fontName]
+      await setFontFavorites(newFavorites)
 
-      // 刷新视图
+      // Refresh views
       this.refreshViews()
 
-      window.showInformationMessage(`Added ${fontName} to whitelist`)
+      window.showInformationMessage(`Added ${fontName} to favorites`)
     }
     catch (error) {
-      window.showErrorMessage(`Failed to add font to whitelist: ${error}`)
+      window.showErrorMessage(`Failed to add to favorites: ${error}`)
     }
   }
 
   /**
-   * 从白名单移除
+   * Remove from favorites
    */
-  async removeFromWhitelist(item: FontTreeItem): Promise<void> {
+  async removeFromFavorites(item: FontTreeItem): Promise<void> {
     try {
       const fontName = item.fontName
-      const currentWhitelist = await getFontWhitelist()
+      const currentFavorites = await getFontFavorites()
 
-      const newWhitelist = currentWhitelist.filter(font => font !== fontName)
-      await setFontWhitelist(newWhitelist)
+      const newFavorites = currentFavorites.filter(font => font !== fontName)
+      await setFontFavorites(newFavorites)
 
-      // 刷新视图
+      // Refresh views
       this.refreshViews()
 
-      window.showInformationMessage(`Removed ${fontName} from whitelist`)
+      window.showInformationMessage(`Removed ${fontName} from favorites`)
     }
     catch (error) {
-      window.showErrorMessage(`Failed to remove font from whitelist: ${error}`)
+      window.showErrorMessage(`Failed to remove from favorites: ${error}`)
     }
   }
 }
